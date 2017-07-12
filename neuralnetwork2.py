@@ -1,29 +1,25 @@
 import numpy as np
 #we now use linear algebra to make a more efficient, complex valued neural network
 class NeuralNetwork(object):
-	def __init__(self,ninputs,noutputs, hidNodes, hidLayers, weights = None):
-		self.ninputs = ninputs
-		self.noutputs = noutputs
-		self.hidNodes = hidNodes
-		self.hidLayers = hidLayers
-		dimensions = []
-		dimensions.append(ninputs)
-		for a in range(hidLayers):
-			dimensions.append(hidNodes)
-		dimensions.append(noutputs)
+	def __init__(self,dimensions, weights = None):
+		self.ninputs = dimensions[0]
+		self.noutputs = dimensions[-1]
+		self.hidLayers = len(dimensions)-2
+		self.dimensions = dimensions
+
 		if weights is not None:
 			n=0
 			self.weights=[]
-			for a in range(hidLayers+1):
-				x=dimensions[a]
-				y=dimensions[a+1]
+			for a in range(self.hidLayers+1):
+				x=self.dimensions[a]
+				y=self.dimensions[a+1]
 				self.weights.append(np.array(weights[n:n+x*y]).reshape(y,x))
 				n+=x*y
 		else:
 			weights=[]
-			for a in range(hidLayers+1):
-				b=np.random.rand(dimensions[a+1],dimensions[a])
-				c=np.random.rand(dimensions[a+1],dimensions[a])*1j
+			for a in range(self.hidLayers+1):
+				b=2*np.random.rand(self.dimensions[a+1],self.dimensions[a])-1
+				c=(2*np.random.rand(self.dimensions[a+1],self.dimensions[a])-1)*1j
 				weights.append(b+c)
 			self.weights = weights
 	def g(self,x):
